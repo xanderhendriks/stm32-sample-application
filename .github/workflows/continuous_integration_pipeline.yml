@@ -119,7 +119,7 @@ jobs:
           name: documentation
           path: docs/build/html
   release:
-    needs: [build-docs, buid-sample_application]
+    needs: [build-docs, build-sample_application]
     if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
     name: Release to Github
     runs-on: ubuntu-20.04
