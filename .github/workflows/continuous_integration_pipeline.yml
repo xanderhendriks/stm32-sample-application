@@ -17,8 +17,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3.1.0
-        with:
-          token: '${{ secrets.SITEHIVE_REPO }}'
       - name: Install packages and dependencies
         run: |
           python3 -m pip install --upgrade pip==22.1.2
@@ -37,9 +35,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3.1.0
-        with:
-          token: '${{ secrets.SITEHIVE_REPO }}'
-          submodules: recursive
       - name: Determine short GIT hash
         id: short-sha
         run: |
@@ -99,8 +94,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3.1.0
-        with:
-          token: '${{ secrets.SITEHIVE_REPO }}'
       - name: Install packages and dependencies
         run: |
           python3 -m pip install --upgrade pip==22.1.2
