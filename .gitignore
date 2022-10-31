@@ -1,0 +1,8 @@
+__pycache__
+applications/*/targets/STM32/Release/*
+applications/*/targets/STM32/Debug/*
+applications/*/targets/STM32/.mxproject
+applications/*/targets/STM32/.settings/language.settings.xml
+applications/*/targets/STM32/.settings/stm32cubeide.project.prefs
+docs/build/*
+

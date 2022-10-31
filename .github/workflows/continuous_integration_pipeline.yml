@@ -1,0 +1,156 @@
+name: Continuous integration pipeline
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release (y/n)?'
+        required: true
+        default: 'y'
+jobs:
+  analyse-code:
+    name: Analyse code
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3.1.0
+        with:
+          token: '${{ secrets.SITEHIVE_REPO }}'
+      - name: Install packages and dependencies
+        run: |
+          python3 -m pip install --upgrade pip==22.1.2
+          pip install -r scripts/requirements-doc.txt
+          mkdir -p docs/build/doxygen
+      - name: Flake8 static analysis
+        uses: xanderhendriks/flake8-action@v2.1.0
+        with:
+          checkName: 'analyse-code'   # NOTE: this needs to be the same as the job name
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-sample_application:
+    needs: analyse-code
+    name: Build the sample application binary
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3.1.0
+        with:
+          token: '${{ secrets.SITEHIVE_REPO }}'
+          submodules: recursive
+      - name: Determine short GIT hash
+        id: short-sha
+        run: |
+          echo "sha=$(echo ${{github.sha}} | sed 's/^\(.\{10\}\).*$/\1/')" >> $GITHUB_OUTPUT
+      - name: Bump version
+        if: github.ref == 'refs/heads/master'
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+          default_bump: minor
+          fetch_all_tags: true
+      - name: Version handling
+        id: version_handling
+        run: |
+          # Use the bumped version when on master or otherwise 0.0.0
+          if [ -z ${{ steps.tag_version.outputs.new_tag }} ]
+          then
+            version=0.0.0
+            file_postfix=${{ steps.short-sha.outputs.sha }}-dev
+          else
+            version=${{ steps.tag_version.outputs.new_version }}
+            file_postfix=$version
+          fi
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "file_postfix=$file_postfix" >> $GITHUB_OUTPUT
+          echo "major=$(echo $version | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1/')" >> $GITHUB_OUTPUT
+          echo "minor=$(echo $version | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\2/')" >> $GITHUB_OUTPUT
+          echo "bugfix=$(echo $version | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\3/')" >> $GITHUB_OUTPUT
+      - name: Build the sample_application binary
+        uses: xanderhendriks/action-build-stm32cubeide@v7.1
+        with:
+          project-path: 'applications/sample_application/targets/STM32'
+          project-target: 'sample_application'
+        env:
+          ENV_VERSION_MAJOR: ${{ steps.version_handling.outputs.major }}
+          ENV_VERSION_MINOR: ${{ steps.version_handling.outputs.minor }}
+          ENV_VERSION_BUGFIX: ${{ steps.version_handling.outputs.bugfix }}
+          ENV_SHORT_GIT_HASH: ${{ steps.short-sha.outputs.sha }}
+      - name: Rename and copy files
+        run: |
+          mkdir stm32-firmware
+          cp applications/sample_application/targets/STM32/Release/sample_application.bin stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.bin
+          cp applications/sample_application/targets/STM32/Release/sample_application.elf stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.elf
+          cp applications/sample_application/targets/STM32/Release/sample_application.list stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.list
+          cp applications/sample_application/targets/STM32/Release/sample_application.map stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.map
+      - name: Upload sample_application artifacts
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: stm32-firmware-sample_application-${{ steps.version_handling.outputs.file_postfix }}
+          path: stm32-firmware
+  build-docs:
+    needs: analyse-code
+    name: Build documentation
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3.1.0
+        with:
+          token: '${{ secrets.SITEHIVE_REPO }}'
+      - name: Install packages and dependencies
+        run: |
+          python3 -m pip install --upgrade pip==22.1.2
+          pip install -r scripts/requirements-doc.txt
+          mkdir -p docs/build/doxygen
+      - name: Doxygen c-code docstring extraction
+        uses: mattnotmitt/doxygen-action@v1.3.1
+      - name: Sphinx pyhton docstring extraction, merge with doxygen and html generation
+        run: |
+          cd docs
+          sphinx-build -W source build/html
+      - name: Upload documentation artifacts
+        if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: documentation
+          path: docs/build/html
+  release:
+    needs: [build-docs, buid-sample_application]
+    if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
+    name: Release to Github
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3.0.1
+        with:
+          path: stm32-firmware
+      - name: Determine version
+        id: determine_version
+        run: |
+          if [ -n "$(find stm32-firmware -name 'stm32-firmware-garfunkel-*-dev')" ]
+          then
+              version=0.0.0
+              file_postfix=$(find stm32-firmware -name "stm32-firmware-garfunkel-*" | sed 's/stm32-firmware\/stm32-firmware-garfunkel-\(.*\)/\1/')
+          else
+              version=$(find stm32-firmware -name "stm32-firmware-garfunkel-*" | sed 's/stm32-firmware\/stm32-firmware-garfunkel-\([0-9\.]*\)/\1/')
+              file_postfix=$version
+          fi
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "file_postfix=$file_postfix" >> $GITHUB_OUTPUT
+      - name: Publish documentation
+        run: |
+          echo 'Where to release to? Github pages are public in our account'
+      - name: Release to Github
+        id: create_release
+        uses: ncipollo/release-action@v1.11.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.determine_version.outputs.file_postfix }}
+          name: Hexanode v${{ steps.determine_version.outputs.file_postfix }}
+          draft: false
+          prerelease: false
+          artifacts: "stm32-firmware/stm32-firmware-*/*"

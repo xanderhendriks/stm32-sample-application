@@ -1,0 +1,18 @@
+[flake8]
+max-line-length = 160
+exclude =
+    ./.git,
+    ./.github,
+    ./.idea,
+    ./applications,
+    ./data,
+    ./docs,
+    .ipynb_checkpoints,
+    __pycache__
+    ./libraries,
+    ./matlab,
+    ./scripts/tests/unit/*/*,
+    ./tests
+builtins =
+    # Gets us to avoid having to include the hexanode repo for Flake8
+    spi_command_response
