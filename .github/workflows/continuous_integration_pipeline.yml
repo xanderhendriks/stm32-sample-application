@@ -144,6 +144,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ steps.determine_version.outputs.file_postfix }}
           name: v${{ steps.determine_version.outputs.file_postfix }}
+          commit: ${{ github.sha }}
           draft: false
           prerelease: false
           artifacts: "stm32-firmware/stm32-firmware-*/*"
