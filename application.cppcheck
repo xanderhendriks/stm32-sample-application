@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <builddir>application-cppcheck-build-dir</builddir>
+    <analyze-all-vs-configs>false</analyze-all-vs-configs>
+    <check-headers>true</check-headers>
+    <check-unused-templates>true</check-unused-templates>
+    <max-ctu-depth>2</max-ctu-depth>
+    <max-template-recursion>100</max-template-recursion>
+    <includedir>
+        <dir name="application/Core/Inc/"/>
+        <dir name="application/Drivers/CMSIS/Include/"/>
+        <dir name="application/Drivers/CMSIS/Device/ST/STM32F3xx/Include/"/>
+        <dir name="application/Drivers/STM32F3xx_HAL_Driver/Inc/"/>
+        <dir name="application/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/"/>
+        <dir name="application/Middlewares/Third_Party/FreeRTOS/Source/include/"/>
+        <dir name="application/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/"/>
+    </includedir>
+    <defines>
+        <define name="__GNUC__"/>
+        <define name="STM32F303x8"/>
+        <define name="IMAGE_ID=1"/>
+        <define name="SHORT_GIT_HASH=&quot;0123456789&quot;"/>
+        <define name="VERSION_BUGFIX=0"/>
+        <define name="VERSION_MINOR=1"/>
+        <define name="VERSION_MAJOR=1"/>
+    </defines>
+    <paths>
+        <dir name="application/Source"/>
+    </paths>
+    <suppressions>
+        <suppression>missingIncludeSystem</suppression>
+        <suppression>invalidPrintfArgType_sint</suppression>
+        <suppression fileName="application\Drivers\CMSIS\Include\core_cm4.h">constVariablePointer</suppression>
+    </suppressions>
+    <project-name>application</project-name>
+</project>

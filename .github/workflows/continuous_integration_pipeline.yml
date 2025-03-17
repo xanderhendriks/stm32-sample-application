@@ -21,13 +21,16 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip==22.1.2
           pip install -r scripts/requirements-doc.txt
-          mkdir -p docs/build/doxygen
       - name: Flake8 static analysis
         uses: xanderhendriks/flake8-action@v2.1.0
         with:
           checkName: 'analyse-code'   # NOTE: this needs to be the same as the job name
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: cppcheck
+        run: |
+          sudo apt-get install -y cppcheck
+          cppcheck --enable=all --inline-suppr --project=application.cppcheck --error-exitcode=-1
   build-sample_application:
     needs: analyse-code
     name: Build the sample application binary
@@ -68,7 +71,7 @@ jobs:
       - name: Build the sample_application binary
         uses: xanderhendriks/action-build-stm32cubeide@v15.0
         with:
-          project-path: 'applications/sample_application/targets/STM32'
+          project-path: 'stm32'
           project-target: 'sample_application'
         env:
           ENV_VERSION_MAJOR: ${{ steps.version_handling.outputs.major }}
@@ -78,10 +81,10 @@ jobs:
       - name: Rename and copy files
         run: |
           mkdir stm32-firmware
-          cp applications/sample_application/targets/STM32/Release/sample_application.bin stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.bin
-          cp applications/sample_application/targets/STM32/Release/sample_application.elf stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.elf
-          cp applications/sample_application/targets/STM32/Release/sample_application.list stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.list
-          cp applications/sample_application/targets/STM32/Release/sample_application.map stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.map
+          cp stm32/Release/sample_application.bin stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.bin
+          cp stm32/Release/sample_application.elf stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.elf
+          cp stm32/Release/sample_application.list stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.list
+          cp stm32/Release/sample_application.map stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.map
       - name: Upload sample_application artifacts
         uses: actions/upload-artifact@v4.6.1
         with:
@@ -111,8 +114,29 @@ jobs:
         with:
           name: documentation
           path: docs/build/html
+  unit-test:
+    needs: analyse-code
+    name: Unit test
+    runs-on: ubuntu-22.04
+    container:
+      image: xanderhendriks/cpputest:1.0
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.1.7
+      - name: Build and run unit test
+        run: |
+          cd unit_test/crc
+          mkdir build
+          cd build
+          cmake ..
+          make
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: 'unit_test/*/build/tests/cpputest_*.xml'
   release:
-    needs: [build-docs, build-sample_application]
+    needs: [build-docs, build-sample_application, unit-test]
     if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
     name: Release to Github
     runs-on: ubuntu-22.04
