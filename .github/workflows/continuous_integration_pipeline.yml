@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v4.2.2
       - name: Install packages and dependencies
         run: |
           python3 -m pip install --upgrade pip==22.1.2
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v4.2.2
       - name: Determine short GIT hash
         id: short-sha
         run: |
@@ -42,7 +42,7 @@ jobs:
       - name: Bump version
         if: github.ref == 'refs/heads/master'
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: true
@@ -83,7 +83,7 @@ jobs:
           cp applications/sample_application/targets/STM32/Release/sample_application.list stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.list
           cp applications/sample_application/targets/STM32/Release/sample_application.map stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.map
       - name: Upload sample_application artifacts
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: stm32-firmware-sample_application-${{ steps.version_handling.outputs.file_postfix }}
           path: stm32-firmware
@@ -93,21 +93,21 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v4.2.2
       - name: Install packages and dependencies
         run: |
           python3 -m pip install --upgrade pip==22.1.2
           pip install -r scripts/requirements-doc.txt
           mkdir -p docs/build/doxygen
       - name: Doxygen c-code docstring extraction
-        uses: mattnotmitt/doxygen-action@v1.3.1
+        uses: mattnotmitt/doxygen-action@v1.12.0
       - name: Sphinx pyhton docstring extraction, merge with doxygen and html generation
         run: |
           cd docs
           sphinx-build -W source build/html
       - name: Upload documentation artifacts
         if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: documentation
           path: docs/build/html
@@ -118,7 +118,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3.0.1
+        uses: actions/download-artifact@v4.6.1
         with:
           path: stm32-firmware
       - name: Determine version
@@ -139,7 +139,7 @@ jobs:
           echo 'Where to release to? Github pages are public in our account'
       - name: Release to Github
         id: create_release
-        uses: ncipollo/release-action@v1.11.1
+        uses: ncipollo/release-action@v1.16.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ steps.determine_version.outputs.file_postfix }}
