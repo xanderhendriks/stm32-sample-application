@@ -13,7 +13,7 @@ on:
 jobs:
   analyse-code:
     name: Analyse code
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
@@ -31,7 +31,7 @@ jobs:
   build-sample_application:
     needs: analyse-code
     name: Build the sample application binary
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
@@ -90,7 +90,7 @@ jobs:
   build-docs:
     needs: analyse-code
     name: Build documentation
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
@@ -100,7 +100,7 @@ jobs:
           pip install -r scripts/requirements-doc.txt
           mkdir -p docs/build/doxygen
       - name: Doxygen c-code docstring extraction
-        uses: mattnotmitt/doxygen-action@v1.12.0
+        uses: mattnotmitt/doxygen-action@v1.8.18
       - name: Sphinx pyhton docstring extraction, merge with doxygen and html generation
         run: |
           cd docs
@@ -115,7 +115,7 @@ jobs:
     needs: [build-docs, build-sample_application]
     if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
     name: Release to Github
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4.6.1
