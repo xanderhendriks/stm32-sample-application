@@ -1,0 +1,72 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "toolchainFile": "${sourceDir}/cmake/gnu-tools-for-stm32.cmake",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "Debug",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+
+                "PROJECT_ORIGINAL_NAME": "test",
+
+                "CMSIS_Dvendor": "STMicroelectronics:13",
+                "CMSIS_Dname": "STM32F303K8T6",
+                "CMSIS_Dcore": "Cortex-M4",
+                "CMSIS_Dtz": "NO_TZ",
+                "CMSIS_Dfpu": "SP_FPU",
+                "CMSIS_Ddsp": "DSP",
+                "CMSIS_Dmve": "NO_MVE",
+                "CMSIS_Dmpu": "MPU",
+                "CMSIS_Dendian": "Little-endian",
+                "CMSIS_Dsecure": "",
+                "CMSIS_Tcompiler": "GCC"
+            }
+        },
+        {
+            "name": "Release",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+
+                "PROJECT_ORIGINAL_NAME": "test",
+
+                "CMSIS_Dvendor": "STMicroelectronics:13",
+                "CMSIS_Dname": "STM32F303K8T6",
+                "CMSIS_Dcore": "Cortex-M4",
+                "CMSIS_Dtz": "NO_TZ",
+                "CMSIS_Dfpu": "SP_FPU",
+                "CMSIS_Ddsp": "DSP",
+                "CMSIS_Dmve": "NO_MVE",
+                "CMSIS_Dmpu": "MPU",
+                "CMSIS_Dendian": "Little-endian",
+                "CMSIS_Dsecure": "",
+                "CMSIS_Tcompiler": "GCC"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "configurePreset": "default"
+        },
+                {
+            "name": "Debug",
+            "configurePreset": "Debug"
+        },
+        {
+            "name": "Release",
+            "configurePreset": "Release"
+        }
+    ]
+}

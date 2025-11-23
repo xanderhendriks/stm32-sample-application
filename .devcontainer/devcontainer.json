@@ -1,0 +1,65 @@
+// https://containers.dev/implementors/json_reference/
+{
+    "name": "STM32 Sample Application",
+    "image": "xanderhendriks/stm32cubeclt:1.19.0",
+    "userEnvProbe": "interactiveShell",
+    "containerEnv": {
+        "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+        "XDG_RUNTIME_DIR": "/tmp",
+        "PATH": "${localEnv:PATH}:/home/user/.local/share/stm32cube/bundles/cmake/4.0.1+st.3/bin"
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace",
+    "containerUser": "user",
+    "mounts": [
+        // Display
+        "source=${env:XDG_RUNTIME_DIR}/${env:WAYLAND_DISPLAY},target=/tmp/${env:WAYLAND_DISPLAY},type=bind,consistency=cached",
+        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached",
+        // USB
+        "source=/dev/bus/usb,target=/dev/bus/usb,type=bind,consistency=cached",
+        // cube bundle
+        "source=${localWorkspaceFolder}/.local,target=/home/user/.local/share/,type=bind,consistency=cached"
+    ],
+    "runArgs": [
+        // Allow container access for programming hardware
+        "--privileged"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "[c]": {
+                    "editor.defaultFormatter": "ms-vscode.cpptools"
+                },
+                "[cpp]": {
+                    "editor.defaultFormatter": "ms-vscode.cpptools"
+                },
+                "C_Cpp.clang_format_path": "/usr/bin/clang-format",
+                "editor.formatOnSave": true,
+                "cmake.configureOnOpen": false,
+                "cmake.cmakePath": "cube-cmake",
+                "cmake.configureArgs": [
+                    "-DCMAKE_COMMAND=cube-cmake"
+                ],
+                "cmake.preferredGenerators": [
+                    "Ninja"
+                ],
+                "stm32cube-ide-clangd.path": "cube",
+                "stm32cube-ide-clangd.arguments": [
+                    "starm-clangd",
+                    "--query-driver=${env:CUBE_BUNDLE_PATH}/gnu-tools-for-stm32/13.3.1+st.9/bin/arm-none-eabi-gcc",
+                    "--query-driver=${env:CUBE_BUNDLE_PATH}/gnu-tools-for-stm32/13.3.1+st.9/bin/arm-none-eabi-g++"
+                ],
+                "STM32VSCodeExtension.cubeCLT.path": "/opt/st/stm32cubeclt_1.19.0"
+            },
+            "extensions": [
+                "cschlosser.doxdocgen",
+                "marus25.cortex-debug",
+                "mermaidchart.vscode-mermaid-chart",
+                "openai.chatgpt",
+                "stmicroelectronics.stm32-vscode-extension"
+            ]
+        }
+    },
+    "initializeCommand": "mkdir -p ${localWorkspaceFolder}/.local"
+}

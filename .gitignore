@@ -1,4 +1,5 @@
 __pycache__
+.local/*
 stm32/Release/*
 stm32/Debug/*
 stm32/.mxproject
