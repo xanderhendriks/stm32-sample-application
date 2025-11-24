@@ -111,6 +111,39 @@
       ]
     },
     {
+      "name": "programmer",
+      "version": "2.20.0",
+      "platform": "darwin",
+      "selected_by": [
+        {
+          "name": "programmer",
+          "version": "^2.20.0"
+        }
+      ]
+    },
+    {
+      "name": "programmer",
+      "version": "2.20.0",
+      "platform": "x86_64-linux",
+      "selected_by": [
+        {
+          "name": "programmer",
+          "version": "^2.20.0"
+        }
+      ]
+    },
+    {
+      "name": "programmer",
+      "version": "2.20.0",
+      "platform": "x86_64-windows",
+      "selected_by": [
+        {
+          "name": "programmer",
+          "version": "^2.20.0"
+        }
+      ]
+    },
+    {
       "name": "st-arm-clangd",
       "version": "19.1.2+st.3",
       "platform": "darwin",
@@ -140,6 +173,39 @@
         {
           "name": "st-arm-clangd",
           "version": "^19.1.2+st.3"
+        }
+      ]
+    },
+    {
+      "name": "stlink-gdbserver",
+      "version": "7.11.0+st.1",
+      "platform": "darwin",
+      "selected_by": [
+        {
+          "name": "stlink-gdbserver",
+          "version": "7.11.0+st.1"
+        }
+      ]
+    },
+    {
+      "name": "stlink-gdbserver",
+      "version": "7.11.0+st.1",
+      "platform": "x86_64-linux",
+      "selected_by": [
+        {
+          "name": "stlink-gdbserver",
+          "version": "7.11.0+st.1"
+        }
+      ]
+    },
+    {
+      "name": "stlink-gdbserver",
+      "version": "7.11.0+st.1",
+      "platform": "x86_64-windows",
+      "selected_by": [
+        {
+          "name": "stlink-gdbserver",
+          "version": "7.11.0+st.1"
         }
       ]
     }

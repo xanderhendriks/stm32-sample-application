@@ -56,6 +56,7 @@ set(sources_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/syscalls.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/sysmem.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/system_stm32f3xx.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Startup/startup_stm32f303k8tx.s
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_cortex.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_dma.c
