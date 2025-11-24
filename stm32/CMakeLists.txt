@@ -41,6 +41,7 @@ set(cpu_PARAMS
     # Other parameters
     # -mthumb
     # -mcpu, -mfloat, -mfloat-abi, ...
+    --specs=nano.specs
 )
 
 # Sources
@@ -197,16 +198,16 @@ target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
     ${cpu_PARAMS}
     ${linker_OPTS}
     -Wl,-Map=${PROJECT_ORIGINAL_NAME}.map
-    -u _printf_float # STDIO float formatting support (remove if not used)
-    --specs=nosys.specs
+    # -u _printf_float # STDIO float formatting support (remove if not used)
+    --specs=nano.specs
     -Wl,--start-group
     -lc
     -lm
-    -lstdc++
-    -lsupc++
     -Wl,--end-group
     -Wl,-z,max-page-size=8 # Allow good software remapping across address space (with proper GCC section making)
     -Wl,--print-memory-usage
+    -Wl,--gc-sections
+    -static 
 )
 
 # Execute post-build to print size, generate hex and bin
