@@ -1,8 +1,10 @@
 __pycache__
 .local/*
-stm32/Release/*
-stm32/Debug/*
-stm32/.mxproject
-stm32/.settings
 docs/build/*
+mx.scratch
+stm32/.mxproject
+stm32/.vscode/settings.json
+stm32/build/*
+stm32/Debug/*
+stm32/Release/*
 
