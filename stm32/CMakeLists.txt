@@ -179,6 +179,8 @@ target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     -Wextra
     -Wpedantic
     -Wno-unused-parameter
+    -fverbose-asm
+    -Wa,-ahlms=${PROJECT_ORIGINAL_NAME}.list
     $<$<COMPILE_LANGUAGE:C>: >
     $<$<COMPILE_LANGUAGE:CXX>:
 
