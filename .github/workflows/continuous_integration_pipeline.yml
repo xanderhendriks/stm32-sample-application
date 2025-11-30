@@ -216,9 +216,12 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "file_postfix=$file_postfix" >> $GITHUB_OUTPUT
       - name: Publish documentation
-        run: |
-          echo 'Where to release to? Github pages are public in our account'
-      - name: Release to Github
+        if: startsWith(github.ref, 'refs/tags')
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: stm32-firmware/documentation
         id: create_release
         uses: ncipollo/release-action@v1.16.0
         with:
@@ -228,4 +231,4 @@ jobs:
           commit: ${{ github.sha }}
           draft: false
           prerelease: false
-          artifacts: "stm32-firmware/stm32-firmware-*/*"
+          artifacts: "stm32-firmware/stm32-firmware-sample_application-extension-*/*"
