@@ -222,6 +222,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: stm32-firmware/documentation
+      - name: Release to Github        
         id: create_release
         uses: ncipollo/release-action@v1.16.0
         with:
