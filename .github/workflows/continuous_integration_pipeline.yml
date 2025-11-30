@@ -10,6 +10,9 @@ on:
         description: 'Release (y/n)?'
         required: true
         default: 'y'
+permissions:
+  contents: write
+
 jobs:
   analyse-code:
     name: Analyse code
@@ -198,6 +201,8 @@ jobs:
     name: Release to Github
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.1.7
       - name: Download artifacts
         uses: actions/download-artifact@v4.1.9
         with:
@@ -216,11 +221,9 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "file_postfix=$file_postfix" >> $GITHUB_OUTPUT
       - name: Publish documentation
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+        uses: JamesIves/github-pages-deploy-action@4.7.4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: stm32-firmware/documentation
+          folder: stm32-firmware/documentation
       - name: Release to Github        
         id: create_release
         uses: ncipollo/release-action@v1.16.0
