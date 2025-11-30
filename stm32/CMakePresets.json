@@ -16,9 +16,7 @@
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-
                 "PROJECT_ORIGINAL_NAME": "sample_application",
-
                 "CMSIS_Dvendor": "STMicroelectronics:13",
                 "CMSIS_Dname": "STM32F303K8T6",
                 "CMSIS_Dcore": "Cortex-M4",
@@ -37,9 +35,7 @@
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-
-                "PROJECT_ORIGINAL_NAME": "test",
-
+                "PROJECT_ORIGINAL_NAME": "sample_application",
                 "CMSIS_Dvendor": "STMicroelectronics:13",
                 "CMSIS_Dname": "STM32F303K8T6",
                 "CMSIS_Dcore": "Cortex-M4",
@@ -60,7 +56,7 @@
             "hidden": true,
             "configurePreset": "default"
         },
-                {
+        {
             "name": "Debug",
             "configurePreset": "Debug"
         },

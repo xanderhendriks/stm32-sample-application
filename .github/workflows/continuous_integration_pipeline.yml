@@ -196,7 +196,7 @@ jobs:
     needs: [build-docs, build-sample_application-cubeide, build-sample_application-cube-extension, unit-test]
     if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
     name: Release to Github
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4.1.9
