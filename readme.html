@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STM32 Sample Project &mdash; STM32 Sample Project 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="C-code" href="c-code/index.html" />
+    <link rel="prev" title="Indices and tables" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> STM32 Sample Project
+            <img src="_static/nx_solutions_logo.gif" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">STM32 Sample Project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-pipeline">Build pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tool-suite">Tool suite</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stm32cubeide">STM32CubeIde</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stm32cube-extension">STM32Cube - Extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#j-link-udev-configuration">j-link udev configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="c-code/index.html">C-code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/index.html">Python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">STM32 Sample Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>STM32 Sample Project</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="stm32-sample-project">
+<h1>STM32 Sample Project<a class="headerlink" href="#stm32-sample-project" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>A simple STM32 sample project how to use Continuous Integration (CI) for building binaries and documentation created from source code.
+The project is created for the <a class="reference external" href="https://www.st.com/en/evaluation-tools/nucleo-f303k8.html">NUCLEO-F303K8</a>.
+It currently only contains the automatically generated code and an example crc.c for the doxygen documentation extraction.</p>
+<p>Depending upon the amount of interest I might add <a class="reference external" href="http://cpputest.github.io/">CppUTest</a> unit testing, both on amd64 and on target. The on target test will use
+a <a class="reference external" href="https://www.raspberrypi.org/">Raspberry Pi</a> for programming and monitoring test execution.</p>
+<p>Next to this most of my projects use a system test based on <a class="reference external" href="https://docs.pytest.org/">PyTest</a> to test the complete binary. I could add an example of that as well.</p>
+<p>Please let me know in the <a class="reference external" href="https://github.com/xanderhendriks/stm32-sample-application/issues">issues</a> what you think. I’m also happy for improvements ideas to the current setup as well.
+Next to Continuous Integration we also have to do a lot of Continuous Learning.</p>
+</section>
+<section id="build-pipeline">
+<h2>Build pipeline<a class="headerlink" href="#build-pipeline" title="Permalink to this heading"></a></h2>
+<p>The build pipeline is automaticaly started when performing a build on master. In this case it will also tag the build with the next version number and create a relase.</p>
+<p>After creating a pull request for every commit a build is executed with the version number 0.0.0 and a 10 character githash. If a test relase is required than the build pipeline can
+be run manually. If release is set to ‘y’ then it will create a release with the name of the 10 character hash postfixed with -dev.</p>
+</section>
+<section id="tool-suite">
+<h2>Tool suite<a class="headerlink" href="#tool-suite" title="Permalink to this heading"></a></h2>
+<p>The project was started with the STM32CubeIde, but this has since been migrated to a CMake based build system. This allows for use of VSCode with a devcontainer
+based on a docker image which can be used both for local development as well as in the CI pipeline.</p>
+<p>The github actions shows how to build both types of projects, so people can choose what they prefer. I would recommend using STM32Cube extension with cmake files
+as it is more scalable and easier to maintain. Using the devcontainer also makes sure that everyone uses the same tool versions and new developers can have their
+first build running in less than 10 minutes.</p>
+<section id="stm32cubeide">
+<h3>STM32CubeIde<a class="headerlink" href="#stm32cubeide" title="Permalink to this heading"></a></h3>
+<p>The project can be opened in STM32CubeIde by opening the .project file in the root of the repository. When using the IDE the following files can be deleted:
+- cmake directory
+- stm32/CMakeLists.txt
+- stm32/CMakePresets.json
+- stm32/.settings directory
+- stm32/.vscode directory</p>
+<p>STM32CubeIde can also be executed from a docker container. See the <a class="reference external" href="https://hub.docker.com/repository/docker/xanderhendriks/stm32cubeide/general">stm32cubeide docker</a>.</p>
+</section>
+<section id="stm32cube-extension">
+<h3>STM32Cube - Extension<a class="headerlink" href="#stm32cube-extension" title="Permalink to this heading"></a></h3>
+<p>The project can also be opened in VSCode using a devcontainer with the <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=stmicroelectronics.stm32-vscode-extension">STM32Cube Extension</a>
+using the <a class="reference external" href="https://hub.docker.com/repository/docker/xanderhendriks/stm32cube-extension/general">stm32cube-extension docker</a></p>
+<p>To open the project in VSCode with the STM32Cube extension first open the repository’s local top level directory. Then open the command palette (F1) and select
+‘Remote-Containers: Open Folder in Container…’. Finally open the ‘stm32’ directory. Now the STM32Cube extension can be used to build and program the project.</p>
+<p>When using the extension the following files can be deleted:
+- .project
+- .cproject</p>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<section id="j-link-udev-configuration">
+<h3>j-link udev configuration<a class="headerlink" href="#j-link-udev-configuration" title="Permalink to this heading"></a></h3>
+<p>If the ST-Link can’t be connected to from the Docker container, you may need to set up udev rules on the host system to allow access to the device.
+Download the <a class="reference external" href="https://github.com/AideTechBot/st-link-udev-rules">st-link-udev-rules</a> files 49-stlinkv2.rules and 49-stlink*.rules and place them
+in the /etc/udev/rules.d/ directory on the host. After that execute the commands:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span><span class="w"> </span><span class="n">udevadm</span><span class="w"> </span><span class="n">control</span><span class="w"> </span><span class="o">--</span><span class="n">reload</span><span class="o">-</span><span class="n">rules</span><span class="w"></span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">udevadm</span><span class="w"> </span><span class="n">trigger</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Indices and tables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="c-code/index.html" class="btn btn-neutral float-right" title="C-code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, NX Solutions.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
