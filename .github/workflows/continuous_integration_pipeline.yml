@@ -216,7 +216,6 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "file_postfix=$file_postfix" >> $GITHUB_OUTPUT
       - name: Publish documentation
-        if: startsWith(github.ref, 'refs/tags')
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
