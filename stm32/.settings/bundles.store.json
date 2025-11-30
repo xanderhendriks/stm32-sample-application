@@ -14,7 +14,7 @@
     },
     {
       "name": "st-arm-clangd",
-      "version": "^19.1.2+st.3"
+      "version": "19.1.2+st.3"
     },
     {
       "name": "stlink-gdbserver",

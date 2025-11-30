@@ -13,7 +13,7 @@ on:
 jobs:
   analyse-code:
     name: Analyse code
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
@@ -31,10 +31,10 @@ jobs:
       #   run: |
       #     sudo apt-get install -y cppcheck
       #     cppcheck --enable=all --inline-suppr --project=application.cppcheck --error-exitcode=-1
-  build-sample_application:
+  build-sample_application-cubeide:
     needs: analyse-code
-    name: Build the sample application binary
-    runs-on: ubuntu-22.04
+    name: STM32CubeIde sample application build
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
@@ -88,12 +88,69 @@ jobs:
       - name: Upload sample_application artifacts
         uses: actions/upload-artifact@v4.6.1
         with:
-          name: stm32-firmware-sample_application-${{ steps.version_handling.outputs.file_postfix }}
+          name: stm32-firmware-sample_application-ide-${{ steps.version_handling.outputs.file_postfix }}
+          path: stm32-firmware
+  build-sample_application-cube-extension:
+    needs: analyse-code
+    name: STM32Cube Extension sample application build
+    runs-on: ubuntu-24.04
+    container:
+      image: xanderhendriks/stm32cube-extension:1.0 
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.2.2
+      - name: Determine short GIT hash
+        id: short-sha
+        run: |
+          echo "sha=$(echo ${{github.sha}} | sed 's/^\(.\{10\}\).*$/\1/')" >> $GITHUB_OUTPUT
+      - name: Bump version
+        if: github.ref == 'refs/heads/master'
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+          default_bump: minor
+          fetch_all_tags: true
+      - name: Version handling
+        id: version_handling
+        run: |
+          # Use the bumped version when on master or otherwise 0.0.0
+          if [ -z ${{ steps.tag_version.outputs.new_tag }} ]
+          then
+            version=0.0.0
+            file_postfix=${{ steps.short-sha.outputs.sha }}-dev
+          else
+            version=${{ steps.tag_version.outputs.new_version }}
+            file_postfix=$version
+          fi
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "file_postfix=$file_postfix" >> $GITHUB_OUTPUT
+          echo "major=$(echo $version | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1/')" >> $GITHUB_OUTPUT
+          echo "minor=$(echo $version | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\2/')" >> $GITHUB_OUTPUT
+          echo "bugfix=$(echo $version | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\3/')" >> $GITHUB_OUTPUT
+      - name: Build the sample_application binary
+        shell: bash
+        working-directory: ./stm32
+        run: |
+          cmake --preset Release
+          cmake --build --preset Release -DVERSION_MAJOR=${{ steps.version_handling.outputs.major }} -DVERSION_MINOR=${{ steps.version_handling.outputs.minor }} -DVERSION_BUGFIX=${{ steps.version_handling.outputs.bugfix }} -DSHORT_GIT_HASH=${{ steps.short-sha.outputs.sha }}
+      - name: Rename and copy files
+        run: |
+          mkdir stm32-firmware
+          cp stm32/build/Release/sample_application.bin stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.bin
+          cp stm32/build/Release/sample_application.elf stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.elf
+          cp stm32/build/Release/sample_application.list stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.list
+          cp stm32/build/Release/sample_application.map stm32-firmware/sample_application-${{ steps.version_handling.outputs.file_postfix }}.map
+      - name: Upload sample_application artifacts
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: stm32-firmware-sample_application-extension-${{ steps.version_handling.outputs.file_postfix }}
           path: stm32-firmware
   build-docs:
     needs: analyse-code
     name: Build documentation
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
@@ -117,7 +174,7 @@ jobs:
   unit-test:
     needs: analyse-code
     name: Unit test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: xanderhendriks/cpputest:1.0
     steps:
@@ -136,10 +193,10 @@ jobs:
         with:
           report_paths: 'unit_test/*/build/tests/cpputest_*.xml'
   release:
-    needs: [build-docs, build-sample_application, unit-test]
+    needs: [build-docs, build-sample_application-cubeide, build-sample_application-cube-extension, unit-test]
     if: github.ref == 'refs/heads/master' || github.event.inputs.release == 'y'
     name: Release to Github
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4.1.9

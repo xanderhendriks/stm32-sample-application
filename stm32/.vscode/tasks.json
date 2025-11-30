@@ -24,6 +24,16 @@
             "problemMatcher": []
         },
         {
+            "type": "shell",
+            "label": "CubeMX: Close the application (Exit doesn't work for some reason)",
+            "command": "pkill",
+            "args": [
+                "-f",
+                "java -jar STM32CubeMX"
+            ],
+            "problemMatcher": []
+        },
+        {
             "label": "Serial logger",
             "type": "shell",
             "command": "python -m serial.tools.miniterm ${input:serialPort} 115200",

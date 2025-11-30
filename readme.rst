@@ -23,3 +23,15 @@ The build pipeline is automaticaly started when performing a build on master. In
 
 After creating a pull request for every commit a build is executed with the version number 0.0.0 and a 10 character githash. If a test relase is required than the build pipeline can 
 be run manually. If release is set to 'y' then it will create a release with the name of the 10 character hash postfixed with -dev.  
+
+Tool suite
+----------
+
+STM32CubeIde
+^^^^^^^^^^^^
+
+
+STM32Cube - Extension
+^^^^^^^^^^^^^^^^^^^^^
+
+
