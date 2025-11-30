@@ -205,12 +205,12 @@ jobs:
       - name: Determine version
         id: determine_version
         run: |
-          if [ -n "$(find stm32-firmware -name 'stm32-firmware-sample_application-*-dev')" ]
+          if [ -n "$(find stm32-firmware -name 'stm32-firmware-sample_application-extension-*-dev')" ]
           then
               version=0.0.0
-              file_postfix=$(find stm32-firmware -name "stm32-firmware-sample_application-*" | sed 's/stm32-firmware\/stm32-firmware-sample_application-\(.*\)/\1/')
+              file_postfix=$(find stm32-firmware -name "stm32-firmware-sample_application-extension-*" | sed 's/stm32-firmware\/stm32-firmware-sample_application-extension-\(.*\)/\1/')
           else
-              version=$(find stm32-firmware -name "stm32-firmware-sample_application-*" | sed 's/stm32-firmware\/stm32-firmware-sample_application-\([0-9\.]*\)/\1/')
+              version=$(find stm32-firmware -name "stm32-firmware-sample_application-extension-*" | sed 's/stm32-firmware\/stm32-firmware-sample_application-extension-\([0-9\.]*\)/\1/')
               file_postfix=$version
           fi
           echo "version=$version" >> $GITHUB_OUTPUT
