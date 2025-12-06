@@ -8,7 +8,7 @@ import re
 def main():
     """
     Parser for csv file export of PCM microphone data from Tracealyser.
-    This was created for analysing the noisefloor from the microphone (see https://sitehive.atlassian.net/wiki/spaces/GAR/pages/1246527522/Microphone+signal)
+    This was created for analysing the noisefloor from the microphone
     """
     parser = argparse.ArgumentParser(description='Analyse PCM csv file.')
     parser.add_argument('file', type=argparse.FileType('r'), help='PCM data')
