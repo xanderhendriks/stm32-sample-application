@@ -79,7 +79,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../python/analyse_pcm.html#analyse_pcm.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parser for csv file export of PCM microphone data from Tracealyser.</span>
-<span class="sd">    This was created for analysing the noisefloor from the microphone (see https://sitehive.atlassian.net/wiki/spaces/GAR/pages/1246527522/Microphone+signal)</span>
+<span class="sd">    This was created for analysing the noisefloor from the microphone</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Analyse PCM csv file.&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">FileType</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;PCM data&#39;</span><span class="p">)</span>
